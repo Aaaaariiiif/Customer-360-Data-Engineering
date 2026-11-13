@@ -1,0 +1,58 @@
+[
+  {
+    "prompt_id": "PROMPT-01",
+    "timestamp": "2026-11-12T08:35:56Z",
+    "phase": "Problem Decomposition & Architecture",
+    "tool": "Gemini 3.8 Flash (High)",
+    "intent": "Decompose requirements into modular pipeline architecture for Customer 360, deterministic entity resolution, lineage preservation, dead-letter quarantine, idempotency, testing, and reconciliation.",
+    "summary": "Full 10-step instructions, edge cases, suggested volume 100k+, acceptance criteria, and 72-hour deliverables."
+  },
+  {
+    "prompt_id": "PROMPT-02",
+    "timestamp": "2026-11-12T08:38:30Z",
+    "phase": "Schema Contracts & Synthetic Generator",
+    "tool": "Gemini 3.8 Flash (High)",
+    "intent": "Define source and conformed schemas, create reproducible dataset generator with fixed seed=42 and deliberate positive/negative edge cases, and output separate ground-truth answer labels.",
+    "summary": "Implement generator supporting small sample and scalable runs (100k+ records), with known exact matches, ambiguous matches, malformed rows, orphan keys, and duplicate keys."
+  },
+  {
+    "prompt_id": "PROMPT-03",
+    "timestamp": "2026-11-12T08:41:00Z",
+    "phase": "Core Pipeline Implementation",
+    "tool": "Gemini 3.8 Flash (High)",
+    "intent": "Implement ingestion layer, topological data quality validation, candidate blocking, deterministic multi-tier matching rules, disjoint-set graph clustering, and DuckDB ACID target publishing.",
+    "summary": "Build src/ingestion.py, src/validation.py, src/entity_resolution.py, src/transformation.py, src/storage.py, src/observability.py, and src/pipeline.py."
+  },
+  {
+    "prompt_id": "PROMPT-04",
+    "timestamp": "2026-11-12T08:46:00Z",
+    "phase": "Automated Testing & Edge Cases",
+    "tool": "Gemini 3.8 Flash (High)",
+    "intent": "Author 14 automated pytest tests covering happy path, empty batches, malformed inputs, nulls, duplicate keys, foreign key orphans, domain edge cases (shared phones, roommates, households), and idempotency.",
+    "summary": "Build test suite in tests/ covering all acceptance criteria and negative scenarios."
+  },
+  {
+    "prompt_id": "PROMPT-05",
+    "timestamp": "2026-11-12T08:49:30Z",
+    "phase": "Debugging, Defect Diagnosis, & Optimization",
+    "tool": "Gemini 3.8 Flash (High)",
+    "intent": "Debug Windows file handle permission errors in test cleanup, fix rule precedence collision, eliminate DuckDB connection resource locks during reconciliation, and vectorize ground-truth assertions.",
+    "summary": "Add observer.close(); implement record_match() with strict confidence protection; replace iterative SQL lookups with in-memory Pandas vectorized merges; 14 tests pass."
+  },
+  {
+    "prompt_id": "PROMPT-06",
+    "timestamp": "2026-11-12T09:09:35Z",
+    "phase": "Packaging, Git Versioning, & Submission Artifacts",
+    "tool": "Gemini 3.8 Flash (High)",
+    "intent": "Package the project as a standalone ZIP archive, initialize clean Git history, and prepare submission artifacts.",
+    "summary": "Initialize Git repository on main branch with clean .gitignore, create standalone customer_360_pipeline.zip (220 KB), and generate quickstart commands."
+  },
+  {
+    "prompt_id": "PROMPT-07",
+    "timestamp": "2026-11-12T10:26:03Z",
+    "phase": "YottaFlex AI Guidelines & FAQ Alignment",
+    "tool": "Gemini 3.8 Flash (High)",
+    "intent": "Align the repository strictly with the two YottaFlex AI PDF documents: Candidate Project Submission Guidelines (01 Make It Run, 02 Show Your Work, 03 Use LLMs Transparently, 04 Make Your Reasoning Visible) and FAQ.",
+    "summary": "Create prompts/PROMPT_HISTORY.md, prompts/prompts.json, docs/AI_DISCLOSURE.md, docs/WALKTHROUGH_GUIDE.md, SUBMISSION_CHECKLIST.md, and structured Git commit history."
+  }
+]

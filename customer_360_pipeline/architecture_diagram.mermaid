@@ -1,0 +1,51 @@
+flowchart TD
+    subgraph Sources ["Upstream Source Systems"]
+        S1["CRM North America<br/>(Customers, Orders, Interactions)"]
+        S2["CRM Europe<br/>(Customers)"]
+        S3["Core Billing<br/>(Accounts, Customers)"]
+        S4["Web Store<br/>(Customers, Accounts, Orders)"]
+        S5["Support Desk<br/>(Interactions)"]
+    end
+
+    subgraph Ingestion ["Ingestion & Schema Contracts"]
+        ING["Ingestion Engine<br/>- File format abstraction (CSV, JSON, Parquet)<br/>- Schema conformity enforcement<br/>- Ingestion metadata tagging (_run_id, _ingested_at)"]
+    end
+
+    subgraph Validation ["Data Quality & Quarantine Engine"]
+        VAL["Topological Validator<br/>1. Format & Range Checks (regex, dates, numerics)<br/>2. Mandatory Field Validation<br/>3. In-Batch Duplicate Handling<br/>4. Cross-Table Referential Integrity"]
+        QRN[("quarantine_rejected_records<br/>Dead-Letter Store<br/>(Raw JSON + Error Reasons)")]
+    end
+
+    subgraph EntityResolution ["Deterministic Entity Resolution"]
+        NORM["Normalization & Standardization<br/>(Phone E.164, Lowercase Email, Clean Address)"]
+        BLOCK["Hash-Partitioned Blocking<br/>O(N) candidate generation on (Tax, Email, Phone, Zip)"]
+        RULES["Deterministic Precedence Rules<br/>Tier 1: Exact Tax ID (1.00)<br/>Tier 2: Exact Email (0.98)<br/>Tier 3: Exact Phone + Last Name (0.92)<br/>Tier 4: Exact Name + Address (0.88)"]
+        DISJ["Disjoint-Set (Union-Find)<br/>Transitive Graph Clustering"]
+        SURV["Deterministic Survivorship<br/>Priority: CRM > Billing > Web > Support<br/>Recency: latest source_updated_at"]
+        UNC[("uncertain_matches_review<br/>Human Review Queue<br/>(Shared phones, Households)")]
+    end
+
+    subgraph Transformation ["Feature Store & Dimensional Layer"]
+        XFORM["Customer 360 Transformer<br/>- Account-to-Customer linking<br/>- Order & Interaction linkage<br/>- Behavioral & Financial Aggregates<br/>- Customer Segmentation (VIP, Regular, At-Risk)"]
+    end
+
+    subgraph Storage ["Target Analytical Storage Layer"]
+        DUCK[("DuckDB Database<br/>customer_360.duckdb<br/>(ACID Transactions)")]
+        PQT["Columnar Parquet Store<br/>data/output/parquet/"]
+        CSV["Operational CSV Exports<br/>data/output/"]
+    end
+
+    subgraph Observability ["Observability & Reconciliation"]
+        RECON["Reconciliation Engine<br/>- Volume conservation<br/>- Referential integrity assertions<br/>- Financial revenue balance<br/>- Ground truth precision/recall"]
+        AUDIT[("pipeline_run_audit<br/>Audit Ledger Table<br/>(Run timings, row tallies, status)")]
+    end
+
+    Sources --> ING
+    ING --> VAL
+    VAL -->|Malformed / Orphan Records| QRN
+    VAL -->|Clean Valid Records| NORM
+    NORM --> BLOCK --> RULES --> DISJ --> SURV
+    RULES -->|Ambiguous Pairs| UNC
+    SURV --> XFORM
+    XFORM --> DUCK & PQT & CSV
+    DUCK --> RECON --> AUDIT

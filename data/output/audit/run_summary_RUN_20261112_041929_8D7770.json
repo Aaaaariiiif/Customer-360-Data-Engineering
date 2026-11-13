@@ -1,0 +1,33 @@
+{
+  "run_id": "RUN_20261112_041929_8D7770",
+  "batch_id": "BATCH_20261112_041929",
+  "status": "FAILED",
+  "start_time": "2026-11-12T04:19:29.735983+00:00",
+  "end_time": "2026-11-12T04:19:32.541376+00:00",
+  "duration_seconds": 2.805,
+  "total_input_rows": 470,
+  "total_valid_rows": 455,
+  "total_quarantined_rows": 14,
+  "total_golden_customers": 0,
+  "total_uncertain_matches": 0,
+  "input_counts": {
+    "customers": 60,
+    "accounts": 75,
+    "orders": 219,
+    "interactions": 116
+  },
+  "valid_counts": {
+    "customers": 56,
+    "accounts": 72,
+    "orders": 216,
+    "interactions": 111
+  },
+  "quarantined_counts": {
+    "customers": 3,
+    "accounts": 3,
+    "orders": 3,
+    "interactions": 5
+  },
+  "target_counts": {},
+  "error_message": "IO Error: Cannot open file \"C:\\Users\\billa\\yotta\\data\\output\\customer_360.duckdb\": The process cannot access the file because it is being used by another process.\r\n"
+}

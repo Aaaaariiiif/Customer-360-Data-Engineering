@@ -1,0 +1,79 @@
+pipeline:
+  name: "customer_360_unified_pipeline"
+  version: "1.0.0"
+  environment: "local"
+
+paths:
+  input_dir: "data/sample"
+  output_dir: "data/output"
+  expected_labels_dir: "data/expected_labels"
+  duckdb_path: "data/output/customer_360.duckdb"
+  parquet_dir: "data/output/parquet"
+  quarantine_dir: "data/output/quarantine"
+  audit_dir: "data/output/audit"
+
+source_systems:
+  crm_na:
+    name: "CRM_NORTH_AMERICA"
+    priority: 1
+    reliability: 0.98
+  crm_eu:
+    name: "CRM_EUROPE"
+    priority: 2
+    reliability: 0.98
+  billing_system:
+    name: "BILLING_CORE"
+    priority: 3
+    reliability: 0.95
+  ecom_store:
+    name: "WEB_STORE"
+    priority: 4
+    reliability: 0.90
+  support_desk:
+    name: "SUPPORT_DESK"
+    priority: 5
+    reliability: 0.85
+
+entity_resolution:
+  blocking_keys:
+    - "tax_id"
+    - "email"
+    - "phone"
+    - "postal_code"
+  rules:
+    exact_tax_id:
+      enabled: true
+      rule_id: "RULE_EXACT_TAX_ID"
+      confidence: 1.00
+    exact_email:
+      enabled: true
+      rule_id: "RULE_EXACT_EMAIL"
+      confidence: 0.98
+    exact_phone_and_last_name:
+      enabled: true
+      rule_id: "RULE_EXACT_PHONE_AND_LAST_NAME"
+      confidence: 0.92
+    exact_name_and_address:
+      enabled: true
+      rule_id: "RULE_EXACT_NAME_AND_ADDRESS"
+      confidence: 0.88
+  uncertain_thresholds:
+    similarity_min: 0.70
+    similarity_max: 0.87
+    flag_shared_phone_different_name: true
+    flag_same_address_different_first_name: true
+
+validation:
+  strict_schema: true
+  quarantine_orphans: true
+  quarantine_malformed: true
+  quarantine_duplicates: true
+  max_error_rate_percent: 50.0
+
+execution:
+  batch_size: 50000
+  write_mode: "overwrite" # overwrite | append | upsert
+  export_formats:
+    - "duckdb"
+    - "parquet"
+    - "csv"

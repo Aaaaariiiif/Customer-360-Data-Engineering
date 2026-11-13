@@ -1,0 +1,42 @@
+{
+  "run_id": "RUN_20261112_032352_7DA65B",
+  "batch_id": "BATCH_20261112_032352",
+  "status": "PASSED",
+  "start_time": "2026-11-12T03:23:52.779369+00:00",
+  "end_time": "2026-11-12T03:23:54.253941+00:00",
+  "duration_seconds": 1.475,
+  "total_input_rows": 470,
+  "total_valid_rows": 455,
+  "total_quarantined_rows": 14,
+  "total_golden_customers": 52,
+  "total_uncertain_matches": 3,
+  "input_counts": {
+    "customers": 60,
+    "accounts": 75,
+    "orders": 219,
+    "interactions": 116
+  },
+  "valid_counts": {
+    "customers": 56,
+    "accounts": 72,
+    "orders": 216,
+    "interactions": 111
+  },
+  "quarantined_counts": {
+    "customers": 3,
+    "accounts": 3,
+    "orders": 3,
+    "interactions": 5
+  },
+  "target_counts": {
+    "dim_unified_customer": 52,
+    "bridge_customer_source_map": 56,
+    "dim_account_unified": 72,
+    "fct_order_unified": 216,
+    "fct_interaction_unified": 111,
+    "fact_customer_360_summary": 52,
+    "quarantine_rejected_records": 14,
+    "uncertain_matches_review": 3
+  },
+  "error_message": ""
+}
